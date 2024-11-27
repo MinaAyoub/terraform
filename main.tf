@@ -6,7 +6,7 @@ provider "azurerm" {
 provider "azuread" {
 }
 
-/* 
+
 #Create the groups for PIM for groups based on the map variable keys
 resource "azuread_group" "pimgroups" {
   for_each = var.role_map
@@ -36,7 +36,7 @@ resource "azuread_directory_role_assignment" "pag_assignments" {
   role_id             = each.value.role_id
   principal_object_id = azuread_group.pimgroups[each.value.group_name].object_id
 }
- */
+
 
 #########################################################
 ############ Roles, Groups and Access packages ##########
