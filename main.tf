@@ -56,7 +56,7 @@ resource "azuread_directory_role" "roles" {
 #Create the groups to be assigned the roles 
 resource "azuread_group" "groups" {
   count                 = length(var.roles_names)
-  display_name          = "GRP_AdminRole_${var.roles_names[count.index]}"
+  display_name          = "RLGRP_AdminRole_${var.roles_names[count.index]}"
   security_enabled      = true
   assignable_to_role    = true
 }
@@ -64,7 +64,7 @@ resource "azuread_group" "groups" {
 #Create the role owner groups for each role to be used as approvers for access packages 
 resource "azuread_group" "role_owners" {
   count                 = length(var.roles_names)
-  display_name          = "GRP_RoleOwners_${var.roles_names[count.index]}"
+  display_name          = "RLGRP_RoleOwners_${var.roles_names[count.index]}"
   security_enabled      = true
   assignable_to_role    = true
 }
