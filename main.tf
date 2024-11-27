@@ -64,14 +64,14 @@ resource "azuread_group" "groups" {
 #Create the role owner groups for each role to be used as approvers for access packages 
 resource "azuread_group" "role_owners" {
   count                 = length(var.roles_names)
-  display_name          = "RLGRP_RoleOwners_${var.roles_names[count.index]}"
+  display_name          = "RoleOwners_${var.roles_names[count.index]}"
   security_enabled      = true
   assignable_to_role    = true
 }
 
 #Create the dynamic admin group, this group will contain all admins, and ONLY they will be able to view and request access packages
 resource "azuread_group" "admin_group" {
-  display_name     = "RLGRP_UAT_Admins_AccessPackageRequest"
+  display_name     = "Admins_AccessPackageRequest"
   security_enabled = true
   types            = ["DynamicMembership"]
 
@@ -90,6 +90,7 @@ resource "azuread_directory_role_eligibility_schedule_request" "elassign" {
   directory_scope_id = "/"
   justification      = "Given through access package"
 }
+
 
 ###################################
 ### Identity Governance Portion ###
