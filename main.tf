@@ -6,6 +6,7 @@ provider "azurerm" {
 provider "azuread" {
 }
 
+###################### Multi Role groups ####################
 
 #Create the groups for PIM for groups based on the map variable keys
 resource "azuread_group" "pimgroups" {
@@ -29,16 +30,6 @@ locals {
   ])
 }
 
-/*
-#Create roles assignment for PIM for groups, will assign the roles to the group id based on key values in the map variable
-resource "azuread_directory_role_assignment" "pag_assignments" {
-  for_each = { for i in local.flattened_map : "${i.group_name}-${i.role_id}" => i }
-
-  role_id             = each.value.role_id
-  principal_object_id = azuread_group.pimgroups[each.value.group_name].object_id
-}
-*/
-
 #Create eligible role assignments for groups in access packages
 resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
   for_each = { for i in local.flattened_map : "${i.group_name}-${i.role_id}" => i }
@@ -49,6 +40,13 @@ resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
   justification      = "Given through access package"
 }
 
+#Create the role owner groups for each MULTI role group to be used as approvers for access packages 
+resource "azuread_group" "role_owners" {
+  count                 = length(group_name)
+  display_name          = "MultiRoleOwners_${var.roles_names[count.index]}"
+  security_enabled      = true
+  assignable_to_role    = true
+}
 
 
 #########################################################
