@@ -37,6 +37,18 @@ resource "azuread_directory_role_assignment" "pag_assignments" {
   principal_object_id = azuread_group.pimgroups[each.value.group_name].object_id
 }
 
+/*
+#Create eligible role assignments for groups in access packages
+resource "azuread_directory_role_eligibility_schedule_request" "elassign" {
+  count                 = length(var.roles_names)
+ 
+  role_definition_id = (azuread_directory_role.roles[count.index]).template_id
+  principal_id       = (azuread_group.groups[count.index]).id
+  directory_scope_id = "/"
+  justification      = "Given through access package"
+}
+*/
+
 
 #########################################################
 ############ Roles, Groups and Access packages ##########
