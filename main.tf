@@ -71,7 +71,7 @@ resource "azuread_group" "role_owners" {
 
 #Create the dynamic admin group, this group will contain all admins, and ONLY they will be able to view and request access packages
 resource "azuread_group" "admin_group" {
-  display_name     = "GRP_UAT_Admins_AccessPackageRequest"
+  display_name     = "RLGRP_UAT_Admins_AccessPackageRequest"
   security_enabled = true
   types            = ["DynamicMembership"]
 
