@@ -42,9 +42,9 @@ resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
 
 #Create the role owner groups for each MULTI role group to be used as approvers for access packages 
 resource "azuread_group" "multi_role_owners" {
-  for_each = { for i in local.flattened_map : "${i.group_name}-${i.role_id}" => i }
-  
-  display_name          = "MultiRoleOwners_${azuread_group.pimgroups[each.value.group_name]}"
+  for_each = var.role_map
+
+  display_name          = each.key
   security_enabled      = true
   assignable_to_role    = true
 }
