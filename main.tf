@@ -29,6 +29,7 @@ locals {
   ])
 }
 
+/*
 #Create roles assignment for PIM for groups, will assign the roles to the group id based on key values in the map variable
 resource "azuread_directory_role_assignment" "pag_assignments" {
   for_each = { for i in local.flattened_map : "${i.group_name}-${i.role_id}" => i }
@@ -36,18 +37,18 @@ resource "azuread_directory_role_assignment" "pag_assignments" {
   role_id             = each.value.role_id
   principal_object_id = azuread_group.pimgroups[each.value.group_name].object_id
 }
+*/
 
-/*
 #Create eligible role assignments for groups in access packages
-resource "azuread_directory_role_eligibility_schedule_request" "elassign" {
-  count                 = length(var.roles_names)
- 
-  role_definition_id = (azuread_directory_role.roles[count.index]).template_id
-  principal_id       = (azuread_group.groups[count.index]).id
+resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
+  for_each = { for i in local.flattened_map : "${i.group_name}-${i.role_id}" => i }
+
+  role_definition_id = each.value.role_id
+  principal_id       = azuread_group.pimgroups[each.value.group_name].object_id
   directory_scope_id = "/"
   justification      = "Given through access package"
 }
-*/
+
 
 
 #########################################################
