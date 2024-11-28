@@ -12,7 +12,7 @@ provider "azuread" {
 resource "azuread_group" "pimgroups" {
   for_each = var.role_map
 
-  display_name          = each.key
+  display_name          = "MultiRoleGrp_${each.key}"
   security_enabled      = true
   assignable_to_role    = true
 }
@@ -44,9 +44,8 @@ resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
 resource "azuread_group" "multi_role_owners" {
   for_each = var.role_map
 
-  display_name          = each.key
+  display_name          = "MultiRoleGrp_Owners_${each.key}"
   security_enabled      = true
-  assignable_to_role    = true
 }
 
 
@@ -68,7 +67,8 @@ resource "azuread_directory_role" "roles" {
 #Create the groups to be assigned the roles 
 resource "azuread_group" "groups" {
   count                 = length(var.roles_names)
-  display_name          = "RLGRP_AdminRole_${var.roles_names[count.index]}"
+  display_name          = "RoleGrp_AdminRole_${var.roles_names[count.index]}"
+  description           = "This group will be assigned the specific roles specified in name"
   security_enabled      = true
   assignable_to_role    = true
 }
@@ -77,6 +77,7 @@ resource "azuread_group" "groups" {
 resource "azuread_group" "role_owners" {
   count                 = length(var.roles_names)
   display_name          = "RoleOwners_${var.roles_names[count.index]}"
+  description           = "This group owns the specified role, owners will be reponsible for approving access"
   security_enabled      = true
   assignable_to_role    = true
 }
@@ -84,6 +85,7 @@ resource "azuread_group" "role_owners" {
 #Create the dynamic admin group, this group will contain all admins, and ONLY they will be able to view and request access packages
 resource "azuread_group" "admin_group" {
   display_name     = "Admins_AccessPackageRequest"
+  description      = "This group will use dynamic membership to house all .ads accounts, only these accounts will be able to view directory role access packages"
   security_enabled = true
   types            = ["DynamicMembership"]
 
