@@ -113,7 +113,7 @@ resource "azuread_directory_role_eligibility_schedule_request" "elassign" {
 
 #Create the catalog 
 resource "azuread_access_package_catalog" "catalog1" {
-  display_name = "CL_EntraIDRoles_PIM"
+  display_name = "CTLG_EntraIDRoles_PIM"
   description  = "This catalog holds Azure AD roles to be put in access packages"
 }
 
@@ -129,7 +129,7 @@ resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
 resource "azuread_access_package" "accesspackages" {
   count        = length(var.roles_names)
   catalog_id   = azuread_access_package_catalog.catalog1.id
-  display_name = "AP_EntraID_${var.roles_names[count.index]}"
+  display_name = "AccessPkg_AdminRole_${var.roles_names[count.index]}"
   description  = "Access package for ${var.roles_names[count.index]}"
 }
 
