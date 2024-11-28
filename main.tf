@@ -98,7 +98,7 @@ resource "azuread_group" "admin_group" {
 
 #Create eligible role assignments for groups in access packages
 resource "azuread_directory_role_eligibility_schedule_request" "elassign" {
-  count                 = length(var.roles_names)
+  count              = length(var.roles_names)
  
   role_definition_id = (azuread_directory_role.roles[count.index]).template_id
   principal_id       = (azuread_group.groups[count.index]).id

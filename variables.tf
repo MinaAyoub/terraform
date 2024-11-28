@@ -3,7 +3,7 @@
 variable "role_map" {
   type = map(list(string))
   default = {
-    "IdentityAdmins22" = ["fe930be7-5e62-47db-91af-98c3a49a38b1", 
+    "IdentityAdmins" = ["fe930be7-5e62-47db-91af-98c3a49a38b1", 
                                   "966707d0-3269-4727-9be2-8c3a10f19b9d", 
                                   "fdd7a751-b60b-444a-984c-02652fe8fa1c", 
                                   "45d8d3c5-c802-45c6-b32a-1d70b5e1e86e", 
