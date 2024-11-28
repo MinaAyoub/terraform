@@ -30,6 +30,7 @@ locals {
   ])
 }
 
+
 #Create eligible role assignments for groups in access packages
 resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
   for_each = { for i in local.flattened_map : "${i.group_name}-${i.role_id}" => i }
