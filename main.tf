@@ -37,7 +37,7 @@ resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
   role_definition_id = each.value.role_id
   principal_id       = azuread_group.pimgroups[each.value.group_name].object_id
   directory_scope_id = "/"
-  justification      = "Given through access package"
+  justification      = "Given through access package "
 }
 
 #Create the role owner groups for each MULTI role group to be used as approvers for access packages 
