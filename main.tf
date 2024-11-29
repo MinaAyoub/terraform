@@ -6,50 +6,6 @@ provider "azurerm" {
 provider "azuread" {
 }
 
-###################### Multi Role groups ####################
-
-#Create the groups for PIM for groups based on the map variable keys
-resource "azuread_group" "pimgroups" {
-  for_each = var.role_map
-
-  display_name          = "MultiRoleGrp_AdminGrp_${each.key}"
-  security_enabled      = true
-  assignable_to_role    = true
-}
-
-
-#Flatten data in variable to create all roles for PIM for groups
-locals {
-  flattened_map = flatten([
-    for k, v in var.role_map : [
-      for id in v : {
-        group_name = k
-        role_id    = id
-      }
-    ]
-  ])
-}
-
-
-#Create eligible role assignments for groups in access packages
-resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
-  for_each = { for i in local.flattened_map : "${i.group_name}-${i.role_id}" => i }
-
-  role_definition_id = each.value.role_id
-  principal_id       = azuread_group.pimgroups[each.value.group_name].object_id
-  directory_scope_id = "/"
-  justification      = "Given through access package "
-}
-
-#Create the role owner groups for each MULTI role group to be used as approvers for access packages 
-resource "azuread_group" "multi_role_owners" {
-  for_each = var.role_map
-
-  display_name          = "MultiRoleGrp_Owners_${each.key}"
-  security_enabled      = true
-}
-
-
 #########################################################
 ############ Roles, Groups and Access packages ##########
 #########################################################
@@ -181,3 +137,123 @@ resource "azuread_access_package_assignment_policy" "policy1" {
     access_review_timeout_behavior = "removeAccess"
   }
 }
+
+
+#############################################################
+###################### Multi Role groups ####################
+#############################################################
+
+#Create the groups for PIM for groups based on the map variable keys
+resource "azuread_group" "pimgroups" {
+  for_each = var.role_map
+
+  display_name          = "MultiRoleGrp_AdminGrp_${each.key}"
+  security_enabled      = true
+  assignable_to_role    = true
+}
+
+#Create the role owner groups for each MULTI role group to be used as approvers for access packages 
+resource "azuread_group" "multi_role_owners" {
+  for_each = var.role_map
+
+  display_name          = "MultiRoleGrp_Owners_${each.key}"
+  security_enabled      = true
+}
+
+
+#Flatten data in variable to create all roles for PIM for groups
+locals {
+  flattened_map = flatten([
+    for k, v in var.role_map : [
+      for id in v : {
+        group_name = k
+        role_id    = id
+      }
+    ]
+  ])
+}
+
+
+#Create eligible role assignments for groups in access packages
+resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
+  for_each = { for i in local.flattened_map : "${i.group_name}-${i.role_id}" => i }
+
+  role_definition_id = each.value.role_id
+  principal_id       = azuread_group.pimgroups[each.value.group_name].object_id
+  directory_scope_id = "/"
+  justification      = "Given through access package "
+}
+
+#########################################################
+### Identity Governance Portion for Multi role groups ###
+#########################################################
+
+
+#Create the catalog resource association with the groups 
+resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
+  #for_each               = var.role_map
+  count                  = length(var.role_map)
+  catalog_id             = azuread_access_package_catalog.catalog1.id
+  resource_origin_id     = (azuread_group.pimgroups[count.index]).id
+  resource_origin_system = "AadGroup"
+}
+
+/*
+#Create the access packages
+resource "azuread_access_package" "accesspackages" {
+  count        = length(var.roles_names)
+  catalog_id   = azuread_access_package_catalog.catalog1.id
+  display_name = "AccessPkg_AdminRole_${var.roles_names[count.index]}"
+  description  = "Access package for ${var.roles_names[count.index]}"
+}
+
+#Create the access package resource association
+resource "azuread_access_package_resource_package_association" "apassoc" {
+  count                           = length(var.roles_names)
+  access_package_id               = (azuread_access_package.accesspackages[count.index]).id
+  catalog_resource_association_id = (azuread_access_package_resource_catalog_association.catalogassoc[count.index]).id
+}
+
+#Create the policy inside the access package
+resource "azuread_access_package_assignment_policy" "policy1" {
+  count             = length(var.roles_names)
+  access_package_id = (azuread_access_package.accesspackages[count.index]).id
+  display_name      = "${var.roles_names[count.index]}-policy"
+  description       = "Policy for ${var.roles_names[count.index]} access package"
+  duration_in_days  = 180
+
+  requestor_settings {
+    requests_accepted = true
+    scope_type = "SpecificDirectorySubjects"
+
+    requestor {
+      object_id = azuread_group.admin_group.object_id
+      subject_type = "groupMembers"
+    }
+
+  }
+
+  approval_settings {
+    approval_required = true
+    requestor_justification_required = true 
+  
+    approval_stage {
+      approval_timeout_in_days = 14
+
+      primary_approver {
+        object_id    = azuread_group.role_owners[count.index].object_id
+        subject_type = "groupMembers"
+      }
+    }
+  }
+
+  assignment_review_settings {
+    enabled                        = true
+    review_frequency               = "quarterly"
+    duration_in_days               = 3
+    review_type                    = "Self"
+    access_review_timeout_behavior = "removeAccess"
+  }
+}
+
+*/
