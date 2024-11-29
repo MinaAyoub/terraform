@@ -209,8 +209,8 @@ resource "azuread_access_package_resource_catalog_association" "multi_catalogass
 resource "azuread_access_package" "multi_accesspackages" {
   count        = length(var.role_map)
   catalog_id   = azuread_access_package_catalog.catalog1.id
-  display_name = "AccessPkg_AdminRole_${local.role_keys[count.index]}"
-  description  = "Access package for ${local.role_keys[count.index]}"
+  display_name = "AccessPkg_MultiAdminRoles_${local.role_keys[count.index]}_GROUP"
+  description  = "Access package for ${local.role_keys[count.index]}_GROUP"
 }
 
 
