@@ -196,7 +196,7 @@ resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
 
 
 #Create the catalog resource association with the groups 
-resource "azuread_access_package_resource_catalog_association" "catalogassoc_multi" {
+resource "azuread_access_package_resource_catalog_association" "multi_catalogassoc" {
   #for_each               = var.role_map
   count                  = length(var.role_map)
   catalog_id             = azuread_access_package_catalog.catalog1.id
@@ -214,14 +214,14 @@ resource "azuread_access_package" "multi_accesspackages" {
 }
 
 
-/*
 #Create the access package resource association
-resource "azuread_access_package_resource_package_association" "apassoc" {
-  count                           = length(var.roles_names)
-  access_package_id               = (azuread_access_package.accesspackages[count.index]).id
-  catalog_resource_association_id = (azuread_access_package_resource_catalog_association.catalogassoc[count.index]).id
+resource "azuread_access_package_resource_package_association" "multi_apassoc" {
+  count                           = length(var.role_map)
+  access_package_id               = (azuread_access_package.multi_accesspackages[count.index]).id
+  catalog_resource_association_id = (azuread_access_package_resource_catalog_association.multi_catalogassoc[count.index]).id
 }
 
+/*
 #Create the policy inside the access package
 resource "azuread_access_package_assignment_policy" "policy1" {
   count             = length(var.roles_names)
