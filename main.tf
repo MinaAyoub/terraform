@@ -190,7 +190,7 @@ resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
 
 
 #Create the catalog resource association with the groups 
-resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
+resource "azuread_access_package_resource_catalog_association" "catalogassoc_multi" {
   #for_each               = var.role_map
   count                  = length(var.role_map)
   catalog_id             = azuread_access_package_catalog.catalog1.id
