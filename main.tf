@@ -174,6 +174,9 @@ locals {
   ])
 }
 
+locals {
+  role_keys = keys(var.role_map)
+}
 
 #Create eligible role assignments for groups in access packages
 resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
@@ -185,6 +188,7 @@ resource "azuread_directory_role_eligibility_schedule_request" "elassignmulti" {
   justification      = "Given through access package "
 }
 
+
 #########################################################
 ### Identity Governance Portion for Multi role groups ###
 #########################################################
@@ -195,7 +199,7 @@ resource "azuread_access_package_resource_catalog_association" "catalogassoc_mul
   #for_each               = var.role_map
   count                  = length(var.role_map)
   catalog_id             = azuread_access_package_catalog.catalog1.id
-  resource_origin_id     = azuread_group.pimgroups[values(var.role_map)[count.index]].id
+  resource_origin_id     = azuread_group.pimgroups[local.role_keys[count.index]].id
   resource_origin_system = "AadGroup"
 }
 
