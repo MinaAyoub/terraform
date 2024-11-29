@@ -221,13 +221,13 @@ resource "azuread_access_package_resource_package_association" "multi_apassoc" {
   catalog_resource_association_id = (azuread_access_package_resource_catalog_association.multi_catalogassoc[count.index]).id
 }
 
-/*
+
 #Create the policy inside the access package
-resource "azuread_access_package_assignment_policy" "policy1" {
-  count             = length(var.roles_names)
-  access_package_id = (azuread_access_package.accesspackages[count.index]).id
-  display_name      = "${var.roles_names[count.index]}-policy"
-  description       = "Policy for ${var.roles_names[count.index]} access package"
+resource "azuread_access_package_assignment_policy" "multi_policy1" {
+  count             = length(var.role_map)
+  access_package_id = (azuread_access_package.multi_accesspackages[count.index]).id
+  display_name      = "${local.role_keys[count.index]}-policy"
+  description       = "Policy for ${local.role_keys[count.index]} access package"
   duration_in_days  = 180
 
   requestor_settings {
@@ -249,7 +249,7 @@ resource "azuread_access_package_assignment_policy" "policy1" {
       approval_timeout_in_days = 14
 
       primary_approver {
-        object_id    = azuread_group.role_owners[count.index].object_id
+        object_id    = azuread_group.multi_role_owners[count.index].object_id
         subject_type = "groupMembers"
       }
     }
@@ -264,4 +264,3 @@ resource "azuread_access_package_assignment_policy" "policy1" {
   }
 }
 
-*/
