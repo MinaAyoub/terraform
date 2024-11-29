@@ -206,7 +206,7 @@ resource "azuread_access_package_resource_catalog_association" "catalogassoc_mul
 
 
 #Create the access packages
-resource "azuread_access_package" "accesspackages" {
+resource "azuread_access_package" "multi_accesspackages" {
   count        = length(var.role_map)
   catalog_id   = azuread_access_package_catalog.catalog1.id
   display_name = "AccessPkg_AdminRole_${local.role_keys[count.index]}"
