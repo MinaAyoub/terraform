@@ -152,6 +152,10 @@ resource "azuread_group" "pimgroups" {
   assignable_to_role    = true
 }
 
+output "group_ids" {
+  value = { for k, v in azuread_group.pimgroups : k => v.id }
+}
+
 #Create the role owner groups for each MULTI role group to be used as approvers for access packages 
 resource "azuread_group" "multi_role_owners" {
   for_each = var.role_map
@@ -194,7 +198,7 @@ resource "azuread_access_package_resource_catalog_association" "catalogassoc_mul
   #for_each               = var.role_map
   count                  = length(var.role_map)
   catalog_id             = azuread_access_package_catalog.catalog1.id
-  resource_origin_id     = (azuread_group.pimgroups[count.index]).id
+  resource_origin_id     = (output.group_ids[count.index])
   resource_origin_system = "AadGroup"
 }
 
