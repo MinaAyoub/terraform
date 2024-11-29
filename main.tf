@@ -25,7 +25,7 @@ resource "azuread_directory_role" "roles" {
 resource "azuread_group" "groups" {
   count                 = length(var.roles_names)
   display_name          = "RoleGrp_AdminRole_${var.roles_names[count.index]}"
-  description           = "This group will be assigned the specific roles specified in name"
+  description           = "This group is assigned the specific roles specified in name"
   security_enabled      = true
   assignable_to_role    = true
 }
@@ -148,6 +148,7 @@ resource "azuread_group" "pimgroups" {
   for_each = var.role_map
 
   display_name          = "MultiRoleGrp_AdminGrp_${each.key}"
+  description           = "This group is assigned the multiple admin roles"
   security_enabled      = true
   assignable_to_role    = true
 }
@@ -203,15 +204,17 @@ resource "azuread_access_package_resource_catalog_association" "catalogassoc_mul
   resource_origin_system = "AadGroup"
 }
 
-/*
+
 #Create the access packages
 resource "azuread_access_package" "accesspackages" {
-  count        = length(var.roles_names)
+  count        = length(var.role_map)
   catalog_id   = azuread_access_package_catalog.catalog1.id
-  display_name = "AccessPkg_AdminRole_${var.roles_names[count.index]}"
-  description  = "Access package for ${var.roles_names[count.index]}"
+  display_name = "AccessPkg_AdminRole_${local.role_keys[count.index]}"
+  description  = "Access package for ${local.role_keys[count.index]}"
 }
 
+
+/*
 #Create the access package resource association
 resource "azuread_access_package_resource_package_association" "apassoc" {
   count                           = length(var.roles_names)
