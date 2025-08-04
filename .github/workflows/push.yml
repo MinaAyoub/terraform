@@ -1,4 +1,3 @@
-
 name: Deploy Infrastructure
 
 on:
@@ -50,7 +49,7 @@ jobs:
         run: terraform show -no-color tfplan
 
       - name: Upload tfplan artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tfplan
           path: tfplan
@@ -85,7 +84,7 @@ jobs:
           -backend-config="key=terraform.tfstate"
 
       - name: Download tfplan artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: tfplan
 
