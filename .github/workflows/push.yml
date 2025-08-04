@@ -7,20 +7,16 @@ on:
 
 env:
   TF_LOG: INFO
-  azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-  STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
-  CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
-  RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
-  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   terraform-plan:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
+    environment:
+      name: production
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,16 +32,21 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Terraform Init
+        env:
+          STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
+          CONTAINER_NAME: ${{ secrets.CONTAINER_NAME_ADFS }}
+          RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
         run: |
           terraform init \
-            -backend-config="storage_account_name=${{ env.STORAGE_ACCOUNT }}" \
-            -backend-config="container_name=${{ env.CONTAINER_NAME }}" \
-            -backend-config="resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" \
+            -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
+            -backend-config="container_name=$CONTAINER_NAME" \
+            -backend-config="resource_group_name=$RESOURCE_GROUP_NAME" \
             -backend-config="key=terraform.tfstate"
 
+      - name: Terraform Validate
+        run: terraform validate
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-
       - name: Show Plan Output
         run: terraform show -no-color tfplan
 
@@ -60,9 +61,8 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-    permissions:
-      id-token: write
-      contents: read
+      # This triggers a manual approval step in GitHub Environments
+      url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -78,17 +78,24 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Terraform Init
+        env:
+          STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
+          CONTAINER_NAME: ${{ secrets.CONTAINER_NAME_ADFS }}
+          RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
         run: |
           terraform init \
-            -backend-config="storage_account_name=${{ env.STORAGE_ACCOUNT }}" \
-            -backend-config="container_name=${{ env.CONTAINER_NAME }}" \
-            -backend-config="resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" \
+            -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
+            -backend-config="container_name=$CONTAINER_NAME" \
+            -backend-config="resource_group_name=$RESOURCE_GROUP_NAME" \
             -backend-config="key=terraform.tfstate"
 
       - name: Download tfplan artifact
         uses: actions/download-artifact@v4
         with:
           name: tfplan
+
+      - name: Move tfplan to root
+        run: mv tfplan/tfplan .
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
