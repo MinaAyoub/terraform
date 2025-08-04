@@ -12,6 +12,21 @@ resource "azurerm_resource_group" "rg" {
   location = "East US"
 }
 
+resource "azurerm_key_vault" "kv" {
+  name                        = "KV-ADFS16LAB"
+  location                    = azurerm_resource_group.rg.location
+  resource_group_name         = azurerm_resource_group.rg.name
+  tenant_id                   = var.azure_tenant_id
+  sku_name                    = "standard"
+  soft_delete_enabled         = true
+  purge_protection_enabled    = true
+
+  network_acls {
+    bypass         = "AzureServices"
+    default_action = "Allow"
+  }
+}
+
 resource "azurerm_virtual_network" "vnet" {
   name                = "VN-ADFS16Lab"
   address_space       = ["10.0.0.0/22"] # 1024 IPs

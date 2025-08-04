@@ -1,3 +1,4 @@
+
 name: Deploy Infrastructure
 
 on:
@@ -7,11 +8,17 @@ on:
 
 env:
   TF_LOG: INFO
+  azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+  STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
+  CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
+  RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
 jobs:
   terraform-plan:
     runs-on: ubuntu-latest
-    environment: production
     permissions:
       id-token: write
       contents: read
@@ -30,28 +37,29 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Terraform Init
-        env:
-          STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
-          CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
-          RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP_NAME" -backend-config="key=terraform.tfstate"
+        run: terraform init \
+          -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
+          -backend-config="container_name=$CONTAINER_NAME" \
+          -backend-config="resource_group_name=$RESOURCE_GROUP_NAME" \
+          -backend-config="key=terraform.tfstate"
 
       - name: Terraform Plan
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         run: terraform plan -out=tfplan
+
+      - name: Show Plan Output
+        run: terraform show -no-color tfplan
+
+      - name: Upload tfplan artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: tfplan
 
   terraform-apply:
     needs: terraform-plan
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://portal.azure.com
     permissions:
       id-token: write
       contents: read
@@ -70,18 +78,16 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Terraform Init
-        env:
-          STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
-          CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
-          RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP_NAME" -backend-config="key=terraform.tfstate"
+        run: terraform init \
+          -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
+          -backend-config="container_name=$CONTAINER_NAME" \
+          -backend-config="resource_group_name=$RESOURCE_GROUP_NAME" \
+          -backend-config="key=terraform.tfstate"
+
+      - name: Download tfplan artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
 
       - name: Terraform Apply
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         run: terraform apply -auto-approve tfplan
