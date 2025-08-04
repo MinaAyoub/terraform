@@ -96,7 +96,7 @@ jobs:
           name: tfplan
 
       - name: Move tfplan to root
-        run: mv tfplan/tfplan .
+        run: mv tfplan .
 
       - name: Terraform Apply
         env:
