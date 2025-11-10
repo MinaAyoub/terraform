@@ -27,6 +27,7 @@ resource "azuread_directory_role" "roles" {
 }
 */
 
+/*
 #Create the groups to be assigned the roles 
 resource "azuread_group" "groups" {
   count                 = length(var.roles_names)
@@ -35,6 +36,16 @@ resource "azuread_group" "groups" {
   security_enabled      = true
   assignable_to_role    = true
 }
+*/
+
+resource "azuread_group" "groups" {
+  for_each              = toset(var.roles_names)
+  display_name          = "RoleGrp_AdminRole_${each.key}"
+  description           = "This group is assigned the specific roles specified in name"
+  security_enabled      = true
+  assignable_to_role    = true
+
+
 
 #Create the role owner groups for each role to be used as approvers for access packages 
 resource "azuread_group" "role_owners" {
@@ -53,7 +64,15 @@ resource "azuread_group" "admin_group" {
   security_enabled = true
 }
 
+resource "azurerm_role_assignment" "group_role_assignment" {
+  for_each           = data.azurerm_role_definition.roles
+  scope              = "/subscriptions/${var.subscription_id}"
+  role_definition_id = each.value.id
+  principal_id       = azuread_group.groups[each.key].object_id
+}
 
+
+/*
 # Assign roles to groups at subscription scope
 resource "azurerm_role_assignment" "group_role_assignment" {
   count              = length(var.roles_names)
@@ -61,7 +80,7 @@ resource "azurerm_role_assignment" "group_role_assignment" {
   role_definition_id = data.azurerm_role_definition.roles[each.key].id
   principal_id       = azuread_group.groups[count.index].object_id
 }
-
+*/
 
 /*
 #Create eligible role assignments for groups in access packages
