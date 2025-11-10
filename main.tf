@@ -127,7 +127,7 @@ resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
 resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
   for_each                 = azuread_group.groups
   catalog_id               = azuread_access_package_catalog.catalog1.id
-  resource_origin_id       = each.value.id
+  resource_origin_id       = each.value.object_id
   resource_origin_system   = "AadGroup"
 }
 
