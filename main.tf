@@ -46,7 +46,7 @@ resource "azuread_group" "groups" {
   assignable_to_role    = true
 }
 
-
+/*
 #Create the role owner groups for each role to be used as approvers for access packages 
 resource "azuread_group" "role_owners" {
   count                 = length(var.roles_names)
@@ -55,7 +55,16 @@ resource "azuread_group" "role_owners" {
   security_enabled      = true
   assignable_to_role    = true
 }
+*/
 
+# Create the role owner groups for each role
+resource "azuread_group" "role_owners" {
+  for_each             = toset(var.roles_names)
+  display_name         = "RoleGrp_Owners_${each.key}"
+  description          = "This group owns the role ${each.key} and approves access"
+  security_enabled     = true
+  assignable_to_role   = true
+}
 
 #Create the dynamic admin group, this group will contain all admins, and ONLY they will be able to view and request access packages
 resource "azuread_group" "admin_group" {
@@ -104,6 +113,7 @@ resource "azuread_access_package_catalog" "catalog1" {
   description  = "This catalog holds Azure AD roles to be put in access packages"
 }
 
+/*
 #Create the catalog resource association with the groups 
 resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
   count                  = length(var.roles_names)
@@ -111,6 +121,16 @@ resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
   resource_origin_id     = (azuread_group.groups[count.index]).id
   resource_origin_system = "AadGroup"
 }
+*/
+
+# Catalog resource association with groups
+resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
+  for_each                 = azuread_group.groups
+  catalog_id               = azuread_access_package_catalog.catalog1.id
+  resource_origin_id       = each.value.id
+  resource_origin_system   = "AadGroup"
+}
+
 
 #Create the access packages
 resource "azuread_access_package" "accesspackages" {
