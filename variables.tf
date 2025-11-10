@@ -36,7 +36,8 @@ variable "roles_names" {
   type    = list(string)
   default = [
               "Reader", 
-              "Key Vault Reader"
+              "Key Vault Reader",
+              "Cost Management Contributor"
 ]
 }
 
