@@ -56,7 +56,7 @@ resource "azuread_group" "admin_group" {
 
 # Assign roles to groups at subscription scope
 resource "azurerm_role_assignment" "group_role_assignment" {
-  for_each           = toset(var.roles_names)
+  count              = length(var.roles_names)
   scope              = "/subscriptions/${var.subscription_id}"
   role_definition_id = data.azurerm_role_definition.roles[each.key].id
   principal_id       = azuread_group.groups[count.index].object_id
