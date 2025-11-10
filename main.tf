@@ -44,7 +44,7 @@ resource "azuread_group" "groups" {
   description           = "This group is assigned the specific roles specified in name"
   security_enabled      = true
   assignable_to_role    = true
-
+}
 
 
 #Create the role owner groups for each role to be used as approvers for access packages 
