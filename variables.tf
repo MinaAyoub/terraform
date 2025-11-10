@@ -40,11 +40,11 @@ variable "roles_names" {
 ]
 }
 
-/*
+
 #sub id
 variable "subscription_id" {
   type        = string
   description = "Azure Subscription ID where roles will be assigned"
 }
-*/
+
 
