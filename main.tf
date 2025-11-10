@@ -40,7 +40,7 @@ resource "azuread_group" "groups" {
 
 resource "azuread_group" "groups" {
   for_each              = toset(var.roles_names)
-  display_name          = "RoleGrp_AdminRole_${each.key}"
+  display_name          = "RoleGrp_ResourceRole_${each.key}"
   description           = "This group is assigned the specific roles specified in name"
   security_enabled      = true
   assignable_to_role    = true
