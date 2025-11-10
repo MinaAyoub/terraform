@@ -2,9 +2,9 @@ name: Push
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - testing_azroles
+  #push:
+    #branches:
+      #- testing_azroles
 
 env:
   TF_LOG: INFO
