@@ -14,12 +14,18 @@ provider "azuread" {
 ##########################
 ### Roles and Groups #####
 ##########################
+data "azurerm_role_definition" "roles" {
+  for_each = toset(var.roles_names)
+  name     = each.key
+}
 
+/*
 #Create all roles as resources 
 resource "azuread_directory_role" "roles" {
   count        = length(var.roles_names)
   display_name = var.roles_names[count.index]
 }
+*/
 
 #Create the groups to be assigned the roles 
 resource "azuread_group" "groups" {
@@ -39,19 +45,25 @@ resource "azuread_group" "role_owners" {
   assignable_to_role    = true
 }
 
+
 #Create the dynamic admin group, this group will contain all admins, and ONLY they will be able to view and request access packages
 resource "azuread_group" "admin_group" {
   display_name     = "Admins_AccessPackageRoleRequest"
-  description      = "This group will use dynamic membership to house all .ads accounts, only these accounts will be able to view directory role access packages"
+  description      = "This group will contain admins able to request access packages"
   security_enabled = true
-  types            = ["DynamicMembership"]
-
-  dynamic_membership {
-    enabled = true
-    rule    = "user.userPrincipalName -contains \".ads\""
-  }
 }
 
+
+# Assign roles to groups at subscription scope
+resource "azurerm_role_assignment" "group_role_assignment" {
+  for_each           = toset(var.roles_names)
+  scope              = "/subscriptions/${var.subscription_id}"
+  role_definition_id = data.azurerm_role_definition.roles[each.key].id
+  principal_id       = azuread_group.groups[each.key].object_id
+}
+
+
+/*
 #Create eligible role assignments for groups in access packages
 resource "azuread_directory_role_eligibility_schedule_request" "elassign" {
   count              = length(var.roles_names)
@@ -61,7 +73,7 @@ resource "azuread_directory_role_eligibility_schedule_request" "elassign" {
   directory_scope_id = "/"
   justification      = "Given through access package"
 }
-
+*/
 
 ###################################
 ### Identity Governance Portion ###
@@ -138,7 +150,7 @@ resource "azuread_access_package_assignment_policy" "policy1" {
   }
 }
 
-
+/*
 #############################################################
 ###################### Multi Role groups ####################
 #############################################################
@@ -264,3 +276,4 @@ resource "azuread_access_package_assignment_policy" "multi_policy1" {
   }
 }
 
+*/

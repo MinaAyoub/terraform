@@ -1,4 +1,4 @@
-
+/*
 #This variable holds the values for the PIM for groups, the group names and the roles to be added 
 variable "role_map" {
   type = map(list(string))
@@ -28,23 +28,22 @@ variable "role_map" {
                                   "5d6b6bb7-de71-4623-b4af-96380a352509"]
      }
 }
+*/
+
 
 #Variables to hold all the names to be used to generate everything else, adding a new value here will create a new group and access package etc
 variable "roles_names" {
   type    = list(string)
   default = [
-              "Application Administrator", 
-              "Application Developer", 
-              "Billing Administrator", 
-              "Global Administrator", 
-              "Global Reader", 
-              "Groups Administrator", 
-              "Security Administrator", 
-              "Security Operator", 
-              "Security Reader", 
-              "User Administrator"
+              "Reader", 
+              "Key Vault Reader"
 ]
 }
 
+#sub ide
+variable "subscription_id" {
+  type        = string
+  description = "Azure Subscription ID where roles will be assigned"
+}
 
 
