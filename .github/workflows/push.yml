@@ -65,7 +65,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: terraform-lock
-        path: ${{ env.WORK_DIRECTORY }}/.terraform.lock.hcl
+        path: /home/runner/work/terraform/terraform/.terraform.lock.hcl
 
     - name: Terraform Plan
       env:
