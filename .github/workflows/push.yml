@@ -66,6 +66,11 @@ jobs:
       with:
         name: tfplan
         path: tfplan.out
+    - name: Upload lock file
+      uses: actions/upload-artifact@v4
+      with:
+        name: terraform-lock
+        path: .terraform.lock.hcl
 
   Terraform-apply:
     # Run a Terraform apply
@@ -82,11 +87,17 @@ jobs:
     # Install the latest version of Terraform CLI 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
-
+    # Download the tfplan from apply
     - name: Download tfplan
       uses: actions/download-artifact@v4
       with:
         name: tfplan
+        path: .
+    # Download the provider lock file from apply job
+    - name: Download lock file
+      uses: actions/download-artifact@v4
+      with:
+        name: terraform-lock
         path: .
     - name: Terraform Apply
       id: apply
