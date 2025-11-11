@@ -13,7 +13,7 @@ permissions:
       id-token: write
       contents: read
 jobs: 
-  deploy-infra:
+  Prepare-Terraform-Plan:
     runs-on: ubuntu-latest
     steps:
     # Checkout the repository to the GitHub Actions runner
@@ -60,13 +60,24 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       run: terraform plan -out=tfplan
+
+
+      
   Terraform-apply:
     # Run a Terraform apply
     name: Terraform apply
+    needs: Prepare-Terraform-Plan
     runs-on: ubuntu-latest
     environment:
       name: production
     steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Install the latest version of Terraform CLI 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
     - name: Terraform Apply
       id: apply
       env:
