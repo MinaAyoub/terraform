@@ -62,7 +62,7 @@ jobs:
       run: terraform plan -out=tfplan.out
     
     - name: Upload tfplan
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: tfplan
         path: tfplan.out
@@ -87,7 +87,7 @@ jobs:
       uses: hashicorp/setup-terraform@v2
 
     - name: Download tfplan
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: tfplan
         path: .
