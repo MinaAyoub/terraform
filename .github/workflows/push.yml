@@ -57,6 +57,9 @@ jobs:
 
     - name: Show working directory
       run: pwd
+    
+    - name: Show GitHub workspace
+      run: echo "${{ github.workspace }}"
 
     - name: List files
       run: ls -la
@@ -65,8 +68,14 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: terraform-lock
-        path: /home/runner/work/terraform/terraform/.terraform.lock.hcl
+        path: /terraform/terraform/.terraform.lock.hcl
+    
+    - name: Show GitHub workspace
+      run: echo "${{ github.workspace }}"
 
+    - name: Show working directory
+      run: pwd
+      
     - name: Terraform Plan
       env:
         STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
