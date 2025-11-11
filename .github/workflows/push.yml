@@ -8,7 +8,7 @@ on:
 
 env:
   TF_LOG: INFO
-  WORK_DIRECTORY: '/' # Set Working Directory To Deployment Type Being Provisioned
+  WORK_DIRECTORY: './' # Set Working Directory To Deployment Type Being Provisioned
 
 permissions:
       id-token: write
