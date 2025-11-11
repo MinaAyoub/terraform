@@ -135,7 +135,7 @@ resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
 resource "azuread_access_package" "accesspackages" {
   for_each      = azuread_group.groups
   catalog_id    = azuread_access_package_catalog.catalog1.id
-  display_name  = "AccessPkg_AdminRole_${each.key}"
+  display_name  = "AccessPkg_AzResourceRole_${each.key}"
   description   = "Access package for ${each.key}"
 }
 /*
