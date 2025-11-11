@@ -8,7 +8,7 @@ on:
 
 env:
   TF_LOG: INFO
-  WORK_DIRECTORY: './' # Set Working Directory To Deployment Type Being Provisioned
+  WORK_DIRECTORY: '.' # Set Working Directory To Deployment Type Being Provisioned
 
 permissions:
       id-token: write
@@ -16,6 +16,10 @@ permissions:
 jobs: 
   Prepare-Terraform-Plan:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ env.WORK_DIRECTORY }} # Set Terraform Working Directory
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
@@ -41,7 +45,6 @@ jobs:
     # Run Terraform init
     - name: Terraform Init
       id: init
-      working-directory: ${{ env.WORK_DIRECTORY }}
       env:
         STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
         CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
@@ -86,6 +89,10 @@ jobs:
     name: Terraform Apply
     needs: Prepare-Terraform-Plan
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ env.WORK_DIRECTORY }} # Set Terraform Working Directory
     environment:
       name: production
     steps:
@@ -109,7 +116,6 @@ jobs:
         name: terraform-lock
         path: ${{ env.WORK_DIRECTORY }}
     - name: Terraform Apply
-      working-directory: ${{ env.WORK_DIRECTORY }}
       id: apply
       env:
         ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
