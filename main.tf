@@ -112,9 +112,17 @@ resource "azuread_access_package_assignment_policy" "policy1" {
 
   assignment_review_settings {
     enabled                        = true
-    review_frequency               = "quarterly"
+    review_frequency               = "halfyearly"
     duration_in_days               = 3
-    review_type                    = "Self"
+    review_type                    = "Reviewers"
+    approver_justification_required = true
     access_review_timeout_behavior = "removeAccess"
+
+    reviewer {
+      object_id = azuread_group.role_owners.object_id
+      subject_type = "groupMembers"
+    }
+
+
   }
 }
