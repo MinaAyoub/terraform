@@ -51,17 +51,8 @@ jobs:
         ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"
-
-    - name: Show working directory
-      run: pwd
-    
-    - name: Show GitHub workspace
-      run: echo "${{ github.workspace }}"
-
-    - name: List files
-      run: ls -la
-    
+      run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"     
+    #Upload the TF Provider lock file
     - name: Upload lock file
       uses: actions/upload-artifact@v4
       with:
@@ -69,7 +60,7 @@ jobs:
         path: .terraform.lock.hcl
         include-hidden-files: true
         if-no-files-found: error
-
+    #Upload the TF init Artifact
     - name: Upload init file
       uses: actions/upload-artifact@v4
       with:
@@ -78,13 +69,7 @@ jobs:
         include-hidden-files: true
         if-no-files-found: error
     
-    
-    - name: Show GitHub workspace
-      run: echo "${{ github.workspace }}"
-
-    - name: Show working directory
-      run: pwd
-
+    #Run TF plan
     - name: Terraform Plan
       env:
         STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
@@ -95,16 +80,8 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       run: terraform plan -out=tfplan.out
-
-    - name: Show working directory
-      run: pwd
     
-    - name: Show GitHub workspace
-      run: echo "${{ github.workspace }}"
-
-    - name: List files
-      run: ls -la
-    
+    #Upload the TF plan
     - name: Upload tfplan
       uses: actions/upload-artifact@v4
       with:
@@ -129,7 +106,7 @@ jobs:
     # Install the latest version of Terraform CLI 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
-      
+
     # Log into Azure with OIDC integration
     - name: 'Az CLI login'
       uses: azure/login@v1
