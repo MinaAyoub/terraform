@@ -36,15 +36,16 @@ resource "azuread_group" "admin_group" {
   security_enabled = true
 }
 
-/*
+
 resource "azurerm_role_assignment" "group_role_assignment" {
   for_each           = data.azurerm_role_definition.roles
   scope              = "/subscriptions/${var.subscription_id}"
   role_definition_id = each.value.id
   principal_id       = azuread_group.groups[each.key].object_id
 }
-*/
 
+
+/*
 resource "time_static" "start" {}
 
 resource "azurerm_pim_eligible_role_assignment" "example" {
@@ -61,7 +62,7 @@ resource "azurerm_pim_eligible_role_assignment" "example" {
   }
 
 }
-
+*/
 
 ###################################
 ### Identity Governance Portion ###
