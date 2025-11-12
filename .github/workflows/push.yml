@@ -129,32 +129,35 @@ jobs:
     # Install the latest version of Terraform CLI 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
+      
     # Download the tfplan from apply
     - name: Download tfplan
       uses: actions/download-artifact@v4
       with:
         name: tfplan
         path: .
+
     # Download the provider lock file from apply job
-    - name: Download lock file
+    - name: Download TF Provider Lock File
       uses: actions/download-artifact@v4
       with:
         name: terraform-lock
         path: .
+
     # Download the provider lock file from apply job
-    - name: Download init file
+    - name: Download TF init Artifact
       uses: actions/download-artifact@v4
       with:
         name: terraform-init
-        path: .        
+        path: ./.terraform        
   
     #Change permissions on artifacts    
-    #- name: Change Permissions on Downloaded Artifacts
-     # run: |
-      #  echo "Updating file permissions for downloaded files in $PWD"
-       # chmod -R 755 $PWD/.terraform
-        #chmod -R 755 $PWD/tfplan.out
-        #chmod -R 755 $PWD/.terraform.lock.hcl
+    - name: Change Permissions on Downloaded Artifacts
+      run: |
+        echo "Updating file permissions for downloaded files in $PWD"
+        chmod -R 755 $PWD/.terraform
+        chmod -R 755 $PWD/tfplan.out
+        chmod -R 755 $PWD/.terraform.lock.hcl
 
       #Run Terraform Apply
     - name: Terraform Apply
