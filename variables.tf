@@ -2,8 +2,7 @@
 variable "roles_names" {
   type    = list(string)
   default = [
-              "Connector Reader", 
-              "Connector Writer",
+              "Reader"
 ]
 }
 
