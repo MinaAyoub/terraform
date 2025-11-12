@@ -35,11 +35,6 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    # Run az commands to confirm sub access
-    - name: 'Run az commands'
-      run: |
-        az account show
-
     # Run Terraform init
     - name: Terraform Init
       id: init
@@ -52,22 +47,6 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"     
-    #Upload the TF Provider lock file
-    - name: Upload lock file
-      uses: actions/upload-artifact@v4
-      with:
-        name: terraform-lock
-        path: .terraform.lock.hcl
-        include-hidden-files: true
-        if-no-files-found: error
-    #Upload the TF init Artifact
-    - name: Upload init file
-      uses: actions/upload-artifact@v4
-      with:
-        name: terraform-init
-        path: .terraform
-        include-hidden-files: true
-        if-no-files-found: error
     
     #Run TF plan
     - name: Terraform Plan
@@ -80,9 +59,27 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       run: terraform plan -out=tfplan.out
-    
+
+    #Upload the TF Provider lock file
+    - name: Upload TF Provider Lock File
+      uses: actions/upload-artifact@v4
+      with:
+        name: terraform-lock
+        path: .terraform.lock.hcl
+        include-hidden-files: true
+        if-no-files-found: error
+
+    #Upload the TF init Artifact
+    - name: Upload TF init Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: terraform-init
+        path: .terraform
+        include-hidden-files: true
+        if-no-files-found: error
+
     #Upload the TF plan
-    - name: Upload tfplan
+    - name: Upload TF Plan
       uses: actions/upload-artifact@v4
       with:
         name: tfplan
@@ -116,7 +113,7 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     # Download the tfplan from apply
-    - name: Download tfplan
+    - name: Download TF Plan
       uses: actions/download-artifact@v4
       with:
         name: tfplan

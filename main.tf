@@ -104,7 +104,7 @@ resource "azuread_access_package_assignment_policy" "policy1" {
       approval_timeout_in_days = 14
 
       primary_approver {
-        object_id    = azuread_group.role_owners[each.key].object_id
+        object_id    = azuread_group.role_owners.object_id
         subject_type = "groupMembers"
       }
     }
