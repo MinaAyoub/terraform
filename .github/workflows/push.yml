@@ -147,6 +147,15 @@ jobs:
       with:
         name: terraform-init
         path: .        
+    #Change permissions on artifacts    
+    - name: Change Permissions on Downloaded Artifacts
+      run: |
+        echo "Updating file permissions for downloaded files in $PWD"
+        chmod -R 755 $PWD/.terraform
+        chmod -R 755 $PWD/tfplan.out
+        chmod -R 755 $PWD/.terraform.lock.hcl
+    
+    #Run Terraform Apply
     - name: Terraform Apply
       id: apply
       env:
