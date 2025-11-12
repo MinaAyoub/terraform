@@ -17,5 +17,4 @@ terraform {
     use_azuread_auth = true
   }
 
-  resource "time_static" "start" {}
 }
