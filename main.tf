@@ -51,7 +51,7 @@ resource "azurerm_role_assignment" "group_role_assignment" {
 #Create the catalog 
 resource "azuread_access_package_catalog" "catalog1" {
   display_name = "CTLG_Azure_Resource_Roles"
-  description  = "This catalog holds Azure AD roles to be put in access packages"
+  description  = "This catalog holds Azure resource roles to be put in access packages"
 }
 
 
