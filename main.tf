@@ -60,7 +60,6 @@ resource "azurerm_pim_eligible_role_assignment" "example" {
     }
   }
 
-  justification = "Permanent eligible assignment for admins"
 }
 
 
