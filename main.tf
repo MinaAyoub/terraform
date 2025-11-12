@@ -55,7 +55,7 @@ resource "azurerm_pim_eligible_role_assignment" "example" {
   schedule {
     start_date_time = time_static.start.rfc3339
     expiration {
-      duration_hours = 8
+     #empty for permanent
     }
   }
 
