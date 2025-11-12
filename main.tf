@@ -45,7 +45,6 @@ resource "azurerm_role_assignment" "group_role_assignment" {
 }
 */
 
-resource "time_static" "example" {}
 
 resource "azurerm_pim_eligible_role_assignment" "example" {
   for_each           = data.azurerm_role_definition.roles

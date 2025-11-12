@@ -16,4 +16,6 @@ terraform {
     use_oidc         = true
     use_azuread_auth = true
   }
+
+  resource "time_static" "start" {}
 }
