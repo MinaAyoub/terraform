@@ -8,6 +8,7 @@ on:
 
 env:
   TF_LOG: INFO
+  TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
 permissions:
       id-token: write
@@ -50,14 +51,6 @@ jobs:
     
     #Run TF plan
     - name: Terraform Plan
-      env:
-        STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
-        CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
-        RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
-        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       run: terraform plan -out=tfplan.out
 
     #Upload the TF Provider lock file
@@ -144,9 +137,4 @@ jobs:
       #Run Terraform Apply
     - name: Terraform Apply
       id: apply
-      env:
-        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       run: terraform apply tfplan.out
