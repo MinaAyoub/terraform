@@ -1,4 +1,4 @@
-name: Push
+name: Build Infrastructure
 
 on:
   workflow_dispatch:
@@ -51,7 +51,7 @@ jobs:
     - name: Terraform Validate
       id: validate
       run: terraform validate 
-      
+
     #Run TF plan
     - name: Terraform Plan
       id: plan
