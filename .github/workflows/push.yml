@@ -85,7 +85,7 @@ jobs:
 
   Terraform-apply:
     name: Terraform Apply
-    needs: Prepare-Terraform-Plan
+    needs: Terraform-Init-Validate-Plan
     runs-on: ubuntu-latest
     defaults:
       run:
