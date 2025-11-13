@@ -134,6 +134,12 @@ jobs:
         chmod -R 755 $PWD/.terraform.lock.hcl
 
       #Run Terraform Apply
-    - name: Terraform Apply
-      id: apply
-      run: terraform apply tfplan.out
+   # - name: Terraform Apply
+    #  id: apply
+     # run: terraform apply tfplan.out
+    - name: Terraform Destroy
+      id: destroy
+      run: |
+         terraform plan -input=false -destroy \
+         -out "tfplan-destroy.out"
+         terraform apply -destroy -input=false -auto-approve tfplan-destroy.out
