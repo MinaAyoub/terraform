@@ -49,7 +49,7 @@ resource "time_static" "start" {}
 
 resource "azurerm_pim_eligible_role_assignment" "example" {
   for_each           = data.azurerm_role_definition.roles
-  scope             = "/subscriptions/${var.subscription_id}"
+  scope             = "${var.subscription_id}"
   role_definition_id = "${var.subscription_id}/each.value.id"
   principal_id      = azuread_group.groups[each.key].object_id
 
