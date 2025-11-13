@@ -20,7 +20,7 @@ permissions:
       id-token: write
       contents: read
 jobs: 
-  Prepare-Terraform-Plan:
+  Terraform-Init-Validate-Plan:
     runs-on: ubuntu-latest
     defaults:
       run:
