@@ -38,7 +38,7 @@ jobs:
       - name: Terraform Init
         env:
           STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
-          CONTAINER_NAME: ${{ secrets.CONTAINER_NAME_ADFS }}
+          CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
           RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
         run: |
           terraform init \
