@@ -12,7 +12,7 @@ provider "azuread" {
 data "azurerm_role_definition" "roles" {
   for_each = toset(var.roles_names)
   name     = each.key
-  scope = ${var.subscription_id}
+  scope = "${var.subscription_id}"
 }
 
 resource "azuread_group" "groups" {
