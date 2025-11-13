@@ -47,6 +47,11 @@ jobs:
       id: init
       run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"     
     
+    #Run Validate  
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate 
+      
     #Run TF plan
     - name: Terraform Plan
       id: plan
