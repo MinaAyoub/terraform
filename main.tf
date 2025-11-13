@@ -96,7 +96,7 @@ resource "azuread_access_package_assignment_policy" "policy1" {
   access_package_id = each.value.id
   display_name      = "${each.key}-policy"
   description       = "Policy for ${each.key} access package"
-  duration_in_days  = 190
+  duration_in_days  = 365
 
   requestor_settings {
     requests_accepted = true
