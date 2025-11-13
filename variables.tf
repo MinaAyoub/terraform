@@ -5,7 +5,8 @@ variable "roles_names" {
               "Reader",
               "Key Vault Reader",
               "Logic App Operator",
-              "Virtual Machine User Login"
+              "Virtual Machine User Login",
+              "Microsoft Sentinel Playbook Operator"
 ]
 }
 
