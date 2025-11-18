@@ -1,11 +1,7 @@
 variable "roles_names" {
   type = list(string)
   default = [
-    "Reader",
-    "Key Vault Reader",
-    "Logic App Operator",
-    "Virtual Machine User Login",
-    "Microsoft Sentinel Playbook Operator"
+    "Logic App Operator"
   ]
 }
 variable "subscription_id" {
