@@ -6,7 +6,8 @@ variable "roles_names" {
     "Logic App Operator",
     "Virtual Machine User Login",
     "Microsoft Sentinel Playbook Operator",
-    "Microsoft Sentinel Reader"
+    "Microsoft Sentinel Reader",
+    "Billing Reader"
   ]
 }
 variable "subscription_id" {
