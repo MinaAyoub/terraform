@@ -15,11 +15,11 @@ variable "multi_role_groups" {
   description = "Map of multi-role group names to their assigned roles"
   type        = map(list(string))
   default     = {
-    multirolegrp1 = [
+    US_POTS_LowRisk = [
       "Reader",
       "Key Vault Reader"
     ],
-    multirolegrp2 = [
+    US_POTS_HighRisk = [
       "Logic App Operator",
       "Virtual Machine User Login"
     ]
