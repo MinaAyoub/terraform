@@ -3,7 +3,6 @@ resource "azuread_group" "groups" {
   display_name      = "RoleGrp_AzResourceRole_${each.key}"
   description       = "This group is assigned the specific roles specified in name"
   security_enabled  = true
-  assignable_to_role = true
 }
 
 resource "azuread_group" "role_owners" {

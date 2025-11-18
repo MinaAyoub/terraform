@@ -2,7 +2,6 @@ resource "azuread_group" "multirole_group" {
   display_name     = var.group_name
   description      = "Group with multiple roles assigned as eligible permanent"
   security_enabled = true
-  assignable_to_role = true
 }
 
 data "azurerm_role_definition" "roles" {
