@@ -13,3 +13,20 @@ variable "subscription_id" {
   description = "Azure Subscription ID where roles will be assigned"
   sensitive   = true
 }
+
+
+variable "multi_role_groups" {
+  description = "Map of multi-role group names to their assigned roles"
+  type        = map(list(string))
+  default     = {
+    multirolegrp1 = [
+      "Reader",
+      "Key Vault Reader"
+    ],
+    multirolegrp2 = [
+      "Logic App Operator",
+      "Virtual Machine User Login"
+    ]
+    # Add more groups as needed
+  }
+}
