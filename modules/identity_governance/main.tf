@@ -1,0 +1,66 @@
+resource "azuread_access_package_catalog" "catalog1" {
+  display_name = "CTLG_Azure_Resource_Roles"
+  description  = "This catalog holds Azure resource roles to be put in access packages"
+}
+
+resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
+  for_each                = var.groups
+  catalog_id              = azuread_access_package_catalog.catalog1.id
+  resource_origin_id      = each.value.object_id
+  resource_origin_system  = "AadGroup"
+}
+
+resource "azuread_access_package" "accesspackages" {
+  for_each    = var.groups
+  catalog_id  = azuread_access_package_catalog.catalog1.id
+  display_name = "AccessPkg_AzResourceRole_${each.key}"
+  description  = "Access package for ${each.key}"
+}
+
+resource "azuread_access_package_resource_package_association" "apassoc" {
+  for_each                       = azuread_access_package.accesspackages
+  access_package_id              = each.value.id
+  catalog_resource_association_id = azuread_access_package_resource_catalog_association.catalogassoc[each.key].id
+}
+
+resource "azuread_access_package_assignment_policy" "policy1" {
+  for_each           = azuread_access_package.accesspackages
+  access_package_id  = each.value.id
+  display_name       = "${each.key}-policy"
+  description        = "Policy for ${each.key} access package"
+  duration_in_days   = 365
+
+  requestor_settings {
+    requests_accepted = true
+    scope_type        = "SpecificDirectorySubjects"
+    requestor {
+      object_id    = var.admin_group.object_id
+      subject_type = "groupMembers"
+    }
+  }
+
+  approval_settings {
+    approval_required               = true
+    requestor_justification_required = true
+    approval_stage {
+      approval_timeout_in_days = 14
+      primary_approver {
+        object_id    = var.role_owners.object_id
+        subject_type = "groupMembers"
+      }
+    }
+  }
+
+  assignment_review_settings {
+    enabled                        = true
+    review_frequency                = "halfyearly"
+    duration_in_days                = 3
+    review_type                     = "Reviewers"
+    approver_justification_required = true
+    access_review_timeout_behavior  = "removeAccess"
+    reviewer {
+      object_id    = var.role_owners.object_id
+      subject_type = "groupMembers"
+    }
+  }
+}
