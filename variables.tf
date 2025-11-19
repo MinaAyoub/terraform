@@ -16,7 +16,8 @@ variable "multi_role_groups" {
   type        = map(list(string))
   default     = {
     US_POTS_LowRisk = [
-      "Reader"
+      "Reader",
+      "Key Vault Reader"
     ],
     US_POTS_HighRisk = [
       "Logic App Operator",
