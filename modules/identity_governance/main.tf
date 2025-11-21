@@ -1,8 +1,10 @@
+#Create catalog to house access package
 resource "azuread_access_package_catalog" "catalog1" {
-  display_name = "CTLG_Azure_Resource_Roles"
+  display_name = "rrrz-cl-us-t-alz-pim"
   description  = "This catalog holds Azure resource roles to be put in access packages"
 }
 
+#Create the catalog association for the groups
 resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
   for_each                = var.groups
   catalog_id              = azuread_access_package_catalog.catalog1.id
@@ -10,10 +12,11 @@ resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
   resource_origin_system  = "AadGroup"
 }
 
+#Create access package
 resource "azuread_access_package" "accesspackages" {
   for_each    = var.groups
   catalog_id  = azuread_access_package_catalog.catalog1.id
-  display_name = "AccessPkg_AzResourceRole_${each.key}"
+  display_name = "rrrz-ap-us-t-alz-pim-${each.key}"
   description  = "Access package for ${each.key}"
 }
 
@@ -23,6 +26,7 @@ resource "azuread_access_package_resource_package_association" "apassoc" {
   catalog_resource_association_id = azuread_access_package_resource_catalog_association.catalogassoc[each.key].id
 }
 
+#Create the access package policy and access review
 resource "azuread_access_package_assignment_policy" "policy1" {
   for_each           = azuread_access_package.accesspackages
   access_package_id  = each.value.id

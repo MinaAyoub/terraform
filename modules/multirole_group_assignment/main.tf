@@ -1,3 +1,4 @@
+#The role groups that will be assigned multiple roles
 resource "azuread_group" "multirole_group" {
   display_name     = var.group_name
   description      = "Group with multiple roles assigned as eligible permanent"
@@ -12,6 +13,7 @@ data "azurerm_role_definition" "roles" {
 
 resource "time_static" "start" {}
 
+#Assign the roles to the group as a permanent eligible assignment
 resource "azurerm_pim_eligible_role_assignment" "multirole_assignments" {
   for_each           = data.azurerm_role_definition.roles
   scope              = "/subscriptions/${var.subscription_id}"
