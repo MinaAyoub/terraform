@@ -17,15 +17,42 @@ variable "multi_role_groups" {
   default     = {
     GRP-US-ALL-SUB-O-HT-USPOTS_LowRisk = [
       "Reader",
-      "Key Vault Reader"
+      "Microsoft Sentinel Contributor",
+      "Logic App Contributor",
+      "Cost Management Reader",
+      "Security Reader",
+      "Support Request Contributor",
+      "Monitoring Reader",
+      "Billing Reader",
+      "Monitoring Contributor",
+      "Workbook Contributor",
+      "Log Analytics Reader",
+      "Microsoft Sentinel Responder"
     ],
     GRP-US-ALL-SUB-O-HT-USPOTS_HighRisk = [
+      "Security Reader",
+      "Reader",
+      "Cost Management Contributor",
+      "Microsoft Sentinel Playbook Operator",
       "Logic App Operator",
-      "Virtual Machine User Login"
+      "Virtual Machine User Login",
+      "Microsoft Sentinel Contributor",
+      "Logic App Contributor",
+      "Cost Management Reader",
+      "Security Reader",
+      "Support Request Contributor",
+      "Monitoring Reader",
+      "Billing Reader",
+      "Monitoring Contributor",
+      "Workbook Contributor",
+      "Log Analytics Reader",
+      "Microsoft Sentinel Reader"
     ],
     GRP-US-ALL-SUB-O-HT-USPOTS_MostPrivileged = [
-      "Logic App Operator",
-      "Virtual Machine User Login"
+      "Owner",
+      "Contributor",
+      "Security Admin",
+      "Reservation Purchaser"
     ]
     # Add more groups as needed
   }
