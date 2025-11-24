@@ -5,11 +5,21 @@ variable "roles_names" {
     "Logic App Operator"
   ]
 }
+
+#The subscription id used for the role scoping, passed from the yml file
 variable "subscription_id" {
   type        = string
   description = "Azure Subscription ID where roles will be assigned"
   sensitive   = true
 }
+
+#The tenant id used as the root management group role scoping 
+variable "tenant_id" {
+  type        = string
+  description = "Root Tenant ID"
+  sensitive   = true
+}
+
 
 #multi role groups
 variable "multi_role_groups" {
