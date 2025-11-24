@@ -1,6 +1,6 @@
 #Create catalog to house access package
 resource "azuread_access_package_catalog" "catalog1" {
-  display_name = "rrrz-cl-us-t-alz-pim"
+  display_name = "rrrz-ctlg-ugv-d-alz-pim"
   description  = "This catalog holds Azure resource roles to be put in access packages"
 }
 
@@ -16,7 +16,7 @@ resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
 resource "azuread_access_package" "accesspackages" {
   for_each    = var.groups
   catalog_id  = azuread_access_package_catalog.catalog1.id
-  display_name = "rrrz-ap-us-t-alz-pim-${each.key}"
+  display_name = "rrrz-ap-ugv-d-alz-pim-${each.key}"
   description  = "Access package for ${each.key}"
 }
 

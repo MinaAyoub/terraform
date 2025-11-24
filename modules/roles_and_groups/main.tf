@@ -1,21 +1,21 @@
 #The role group for individual roles
 resource "azuread_group" "groups" {
   for_each          = toset(var.roles_names)
-  display_name      = "GRP-US-ALL-SUB-O-HT-${each.key}"
+  display_name      = "CL-M-USGV-PIM-O-HT-AP_${each.key}"
   description       = "This group is assigned the specific roles specified in name"
   security_enabled  = true
 }
 
 #The owner group who will approve requests and do reviews
 resource "azuread_group" "role_owners" {
-  display_name      = "GRP-US-ALL-SUB-O-HT-AP_APPROVERS_USPOTS"
+  display_name      = "SGG-US-ALL-PIM-O-HT-USPOTS_AP_APPROVERS"
   description       = "This group is the approver and reviewer for the Az resource roles and their access reviews"
   security_enabled  = true
 }
 
 #The requestor admin group, the team who CAN request access to the APs
 resource "azuread_group" "admin_group" {
-  display_name      = "GRP-US-ALL-SUB-O-HT-AP_REQUESTORS_USPOTS"
+  display_name      = "SGG-US-ALL-PIM-O-HT-USPOTS_AP_REQUESTORS"
   description       = "This group will contain admins who able to request access packages containing az resource roles"
   security_enabled  = true
 }

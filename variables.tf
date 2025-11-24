@@ -1,3 +1,4 @@
+#Single role groups
 variable "roles_names" {
   type = list(string)
   default = [
@@ -10,7 +11,7 @@ variable "subscription_id" {
   sensitive   = true
 }
 
-
+#multi role groups
 variable "multi_role_groups" {
   description = "Map of multi-role group names to their assigned roles"
   type        = map(list(string))
