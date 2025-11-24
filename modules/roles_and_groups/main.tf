@@ -1,9 +1,5 @@
-#The role group for individual roles
-resource "azuread_group" "groups" {
-  for_each          = toset(var.roles_names)
-  display_name      = "CL-M-USGV-PIM-O-HT-AP_${each.key}"
-  description       = "This group is assigned the specific roles specified in name"
-  security_enabled  = true
+locals {
+  prefix = substr(var.subscription_id, 0, 4) # first 6 characters
 }
 
 #The owner group who will approve requests and reviews
@@ -17,6 +13,14 @@ resource "azuread_group" "role_owners" {
 resource "azuread_group" "admin_group" {
   display_name      = "SGG-US-ALL-PIM-O-HT-AP_USPOTS_REQUESTORS"
   description       = "This group will contain admins who able to request access packages containing az resource roles"
+  security_enabled  = true
+}
+
+#The role group for individual roles
+resource "azuread_group" "groups" {
+  for_each          = toset(var.roles_names)
+  display_name      = "CL-M-USGV-PIM-O-HT-AP_${each.key}-${local.prefix}"
+  description       = "This group is assigned the specific roles specified in name"
   security_enabled  = true
 }
 
