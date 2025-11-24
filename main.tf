@@ -8,6 +8,7 @@ module "roles_and_groups" {
   source          = "./modules/roles_and_groups"
   roles_names     = var.roles_names
   subscription_id = var.subscription_id
+  tenant_id       = var.tenant_id
 }
 
 # Multi-role group assignment modules (one per group)
