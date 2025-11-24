@@ -16,7 +16,7 @@ variable "multi_role_groups" {
   description = "Map of multi-role group names to their assigned roles"
   type        = map(list(string))
   default     = {
-    LowRisk_USPOTS = [
+    AP_USPOTS_LowRisk = [
       "Reader",
       "Microsoft Sentinel Contributor",
       "Logic App Contributor",
@@ -30,7 +30,7 @@ variable "multi_role_groups" {
       "Log Analytics Reader",
       "Microsoft Sentinel Responder"
     ],
-    HighRisk_USPOTS = [
+    AP_USPOTS_HighRisk = [
       "Security Reader",
       "Reader",
       "Cost Management Contributor",
@@ -49,7 +49,7 @@ variable "multi_role_groups" {
       "Log Analytics Reader",
       "Microsoft Sentinel Reader"
     ],
-    MostPrivileged_USPOTS = [
+    AP_USPOTS_MostPrivileged = [
       "Owner",
       "Contributor",
       "Security Admin",
