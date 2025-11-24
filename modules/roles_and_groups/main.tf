@@ -6,16 +6,16 @@ resource "azuread_group" "groups" {
   security_enabled  = true
 }
 
-#The owner group who will approve requests and do reviews
+#The owner group who will approve requests and reviews
 resource "azuread_group" "role_owners" {
-  display_name      = "SGG-US-ALL-PIM-O-HT-USPOTS_AP_APPROVERS"
+  display_name      = "SGG-US-ALL-PIM-O-HT-AP_USPOTS_APPROVERS"
   description       = "This group is the approver and reviewer for the Az resource roles and their access reviews"
   security_enabled  = true
 }
 
 #The requestor admin group, the team who CAN request access to the APs
 resource "azuread_group" "admin_group" {
-  display_name      = "SGG-US-ALL-PIM-O-HT-USPOTS_AP_REQUESTORS"
+  display_name      = "SGG-US-ALL-PIM-O-HT-AP_USPOTS_REQUESTORS"
   description       = "This group will contain admins who able to request access packages containing az resource roles"
   security_enabled  = true
 }
