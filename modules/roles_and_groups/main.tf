@@ -26,7 +26,7 @@ data "azurerm_role_definition" "roles" {
   for_each = toset(var.roles_names)
   name     = each.key
   #scope    = "/subscriptions/${var.subscription_id}"
-  scope    = "/subscriptions/${var.tenant_id}"
+  scope    = "/providers/Microsoft.Management/managementGroups/${var.tenant_id}"
 }
 
 resource "time_static" "start" {}
@@ -35,7 +35,7 @@ resource "time_static" "start" {}
 resource "azurerm_pim_eligible_role_assignment" "example" {
   for_each            = data.azurerm_role_definition.roles
   #scope               = "/subscriptions/${var.subscription_id}"
-  scope                = "/subscriptions/${var.tenant_id}"
+  scope                = "/providers/Microsoft.Management/managementGroups/${var.tenant_id}"
   role_definition_id  = each.value.id
   principal_id        = azuread_group.groups[each.key].object_id
   schedule {
