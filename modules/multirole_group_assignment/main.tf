@@ -5,7 +5,7 @@ locals {
 
 /*
 locals {
-  prefix = substr(var.tenant_id, 0, 4) # first 6 characters
+  prefix = substr(var.subscription_id, 0, 4) # first 6 characters
 }
 */
 
