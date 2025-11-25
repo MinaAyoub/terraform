@@ -11,7 +11,7 @@ locals {
 
 #The role groups that will be assigned multiple roles
 resource "azuread_group" "multirole_group" {
-  display_name     = "CL-M-USGV-PIM-O-HT-${var.group_name}"
+  display_name     = "CL-M-USGV-PIM-O-HT-${var.group_name}-${local.prefix}"
   description      = "Group with multiple roles assigned as eligible permanent"
   security_enabled = true
 }
