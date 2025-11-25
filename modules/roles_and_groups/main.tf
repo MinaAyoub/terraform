@@ -1,6 +1,13 @@
+#To grab the first 4 of the tenant id
 locals {
   prefix = substr(var.tenant_id, 0, 4) # first 6 characters
 }
+
+/*
+locals {
+  prefix = substr(var.tenant_id, 0, 4) # first 6 characters
+}
+*/
 
 #The owner group who will approve requests and reviews
 resource "azuread_group" "role_owners" {

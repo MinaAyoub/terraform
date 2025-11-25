@@ -18,6 +18,7 @@ module "multirole_group_assignment" {
   group_name      = each.key
   role_names      = each.value
   subscription_id = var.subscription_id
+  tenant_id       = var.tenant_id
 }
 
 # Merge all groups for identity governance
