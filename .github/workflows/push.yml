@@ -10,7 +10,7 @@ env:
   TF_LOG: INFO
   TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID}}
-  TF_VAR_MI_CLIENT_ID: ${{ secrets.AZURE_MANAGED_IDENTITY_CLIENT_ID}}
+  TF_VAR_mi_client_id: ${{ secrets.AZURE_MANAGED_IDENTITY_CLIENT_ID}}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
   CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
@@ -57,7 +57,7 @@ jobs:
     #Run TF plan
     - name: Terraform Plan
       id: plan
-      run: terraform plan -out=tfplan.out
+      run: terraform plan -input=false -out=tfplan.out
 
     #Upload the TF Provider lock file
     - name: Upload TF Provider Lock File
