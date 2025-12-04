@@ -4,6 +4,7 @@ resource "azuread_access_package_catalog" "catalog1" {
   description  = "This catalog holds Azure resource roles to be put in access packages"
 }
 
+#To add the MI as the catalog owner to create AP
 data "azuread_access_package_catalog_role" "catalogrole" {
   display_name = "Catalog owner"
 }
@@ -13,6 +14,13 @@ resource "azuread_access_package_catalog_role_assignment" "catalogroleassign" {
   principal_object_id = var.mi_objid
   catalog_id          = azuread_access_package_catalog.catalog1.id
 }
+
+#wait for changes
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [azuread_access_package_catalog_role_assignment.catalogroleassign]
+  create_duration = "30s"
+}
+
 
 #Create the catalog association for the groups
 resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
