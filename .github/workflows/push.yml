@@ -16,6 +16,7 @@ env:
   RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_MI_CLIENT_ID: ${{ secrets.AZURE_MANAGED_IDENTITY_CLIENT_ID}}
 
 permissions:
       id-token: write

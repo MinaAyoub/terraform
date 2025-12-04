@@ -4,6 +4,16 @@ resource "azuread_access_package_catalog" "catalog1" {
   description  = "This catalog holds Azure resource roles to be put in access packages"
 }
 
+data "azuread_access_package_catalog_role" "catalogrole" {
+  display_name = "Catalog owner"
+}
+
+resource "azuread_access_package_catalog_role_assignment" "example" {
+  role_id             = data.azuread_access_package_catalog_role.catalogrole.object_id
+  principal_object_id = var.mi_client_id
+  catalog_id          = azuread_access_package_catalog.catalog1.id
+}
+
 #Create the catalog association for the groups
 resource "azuread_access_package_resource_catalog_association" "catalogassoc" {
   for_each                = var.groups

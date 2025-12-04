@@ -20,6 +20,13 @@ variable "tenant_id" {
   sensitive   = true
 }
 
+#The tenant id used as the root management group role scoping 
+variable "mi_client_id" {
+  type        = string
+  description = "Managed Identity Client ID"
+  sensitive   = true
+}
+
 
 #multi role groups
 variable "multi_role_groups" {
