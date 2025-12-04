@@ -34,5 +34,6 @@ module "identity_governance" {
   groups      = local.all_groups
   admin_group = module.roles_and_groups.admin_group
   role_owners = module.roles_and_groups.role_owners
+  mi_client_id    = var.mi_client_id
 }
 
