@@ -11,7 +11,7 @@ variable "role_owners" {
   type        = any
 }
 
-variable "mi_client_id" {
+variable "mi_objid" {
   type        = string
   description = "Managed Identity Client ID"
   sensitive   = true

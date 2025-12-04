@@ -8,9 +8,9 @@ data "azuread_access_package_catalog_role" "catalogrole" {
   display_name = "Catalog owner"
 }
 
-resource "azuread_access_package_catalog_role_assignment" "example" {
+resource "azuread_access_package_catalog_role_assignment" "catalogroleassign" {
   role_id             = data.azuread_access_package_catalog_role.catalogrole.object_id
-  principal_object_id = var.mi_client_id
+  principal_object_id = var.mi_objid
   catalog_id          = azuread_access_package_catalog.catalog1.id
 }
 

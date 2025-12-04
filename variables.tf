@@ -21,7 +21,7 @@ variable "tenant_id" {
 }
 
 #The tenant id used as the root management group role scoping 
-variable "mi_client_id" {
+variable "mi_objid" {
   type        = string
   description = "Managed Identity Client ID"
   sensitive   = true

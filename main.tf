@@ -21,7 +21,7 @@ module "multirole_group_assignment" {
   tenant_id       = var.tenant_id
 }
 
-# Merge all groups for identity governance
+# Merge all groups for identity governance 
 locals {
   all_groups = merge(
     module.roles_and_groups.groups,
@@ -34,6 +34,6 @@ module "identity_governance" {
   groups          = local.all_groups
   admin_group     = module.roles_and_groups.admin_group
   role_owners     = module.roles_and_groups.role_owners
-  mi_client_id    = var.mi_client_id
+  mi_objid   = var.mi_objid
 }
 
