@@ -6,7 +6,7 @@ resource "azuread_access_package_catalog" "catalog1" {
 
 #To add the MI as the catalog owner to create AP
 data "azuread_access_package_catalog_role" "catalogrole" {
-  display_name = "Catalog owner"
+  #display_name = "Catalog owner"
 }
 
 resource "azuread_access_package_catalog_role_assignment" "catalogroleassign" {
